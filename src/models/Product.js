@@ -25,8 +25,7 @@ productSchema.static("findProducts", async function (query) {
   const blogPosts = await this.find(query.criteria, query.options.fields)
     .sort(query.options.sort)
     .limit(query.options.limit)
-    .skip(query.options.skip)
-    .populate("author");
+    .skip(query.options.skip);
 
   return { total, blogPosts };
 });
