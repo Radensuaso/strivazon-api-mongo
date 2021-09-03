@@ -4,6 +4,7 @@ const { Schema, model } = mongoose;
 const cartSchema = new Schema(
   {
     user_id: { type: Schema.Types.ObjectId, ref: "user", required: true },
+    quantity: {type: Number, required: true},
     products: [
       {
         product_id: {
@@ -14,7 +15,7 @@ const cartSchema = new Schema(
         name: { type: String, required: true },
         brand: { type: String, required: true },
         price: { type: Number, required: true },
-        imageUrl: { type: Number, required: true },
+        imageUrl: { type: String, required: true },
         quantity: { type: Number, required: true },
       },
     ],
