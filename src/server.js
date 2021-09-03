@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import productsRouter from "./services/products/index.js";
 import usersRouter from "./services/users/index.js";
-import reviewsRouter from "./services/reviews/index.js";
 import cartRouter from "./services/cart/index.js";
 import {
   notFoundHandler,
@@ -22,7 +21,6 @@ server.use(cors());
 server.use(express.json());
 server.use("/products", productsRouter);
 server.use("/users", usersRouter);
-server.use("/reviews", reviewsRouter);
 server.use("/cart", cartRouter);
 
 server.use(notFoundHandler);
