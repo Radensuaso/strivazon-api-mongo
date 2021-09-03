@@ -1,7 +1,5 @@
 import express from "express";
-import { syncSequelize } from "./db/index.js";
 import cors from "cors";
-import categoriesRouter from "./services/categories/index.js";
 import productsRouter from "./services/products/index.js";
 import usersRouter from "./services/users/index.js";
 import reviewsRouter from "./services/reviews/index.js";
@@ -13,32 +11,35 @@ import {
   genericServerErrorHandler,
 } from "./errorHandlers.js";
 import listEndpoints from "express-list-endpoints";
+import mongoose from "mongoose";
 
-const app = express();
+const server = express();
 
-const { PORT } = process.env;
+const port = process.env.port;
 
-app.use(cors());
+server.use(cors());
 
-app.use(express.json());
-app.use("/categories", categoriesRouter);
-app.use("/products", productsRouter);
-app.use("/users", usersRouter);
-app.use("/reviews", reviewsRouter);
-app.use("/cart", cartRouter);
+server.use(express.json());
+server.use("/products", productsRouter);
+server.use("/users", usersRouter);
+server.use("/reviews", reviewsRouter);
+server.use("/cart", cartRouter);
 
-app.use(notFoundHandler);
-app.use(badRequestHandler);
-app.use(forbiddenHandler);
-app.use(genericServerErrorHandler);
+server.use(notFoundHandler);
+server.use(badRequestHandler);
+server.use(forbiddenHandler);
+server.use(genericServerErrorHandler);
 
-console.table(listEndpoints(app));
+mongoose.connect(process.env.MONGO_CONNECTION);
 
-app.listen(PORT, async () => {
-  try {
-    await syncSequelize();
-    console.log("🛩️ Server is running on port", PORT);
-  } catch (error) {
-    console.log(error);
-  }
+mongoose.connection.on("connected", () => {
+  console.log("🍃Successfully connected to mongo!");
+  server.listen(port, () => {
+    console.table(listEndpoints(server));
+    console.log("🛩️ Server is running on port ", port);
+  });
+});
+
+mongoose.connection.on("error", (err) => {
+  console.log("MONGO ERROR: ", err);
 });
