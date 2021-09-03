@@ -2,6 +2,8 @@ import express from "express";
 import createHttpError from "http-errors";
 import ProductModel from "../../models/Product.js";
 import q2m from "query-to-mongo";
+import multer from "multer";
+import saveImageCloudinary from "../../tools/saveImageCloudinary.js";
 
 const router = express.Router();
 
@@ -113,6 +115,31 @@ router
       next(error);
     }
   });
+
+// =============== post product image =================
+router.post(
+  "/:productId/image",
+  multer({ storage: saveImageCloudinary }).single("image"),
+  async (req, res, next) => {
+    try {
+      const imageUrl = req.file.path;
+      const { productId } = req.params;
+
+      const updatedProduct = await ProductModel.findByIdAndUpdate(
+        productId,
+        { imageUrl },
+        { new: true }
+      );
+      if (updatedProduct) {
+        res.send(updatedProduct);
+      } else {
+        next(createHttpError(404, `Product with id: ${productId} not found!`));
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router
   .route("/:productId/reviews/:reviewId")
