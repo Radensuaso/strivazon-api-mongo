@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon -e js -r dotenv/config ./src/server.js",
-    "start": "node ./src/server.js"
+    "start": "node ./src/server.js",
+    "express-debugger": "DEBUG=express:* nodemon -e js -r dotenv/config ./src/server.js"
   },
   "keywords": [],
   "author": "",
