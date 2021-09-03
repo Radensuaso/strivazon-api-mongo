@@ -22,12 +22,12 @@ const productSchema = new Schema(
 
 productSchema.static("findProducts", async function (query) {
   const total = await this.countDocuments(query.criteria);
-  const blogPosts = await this.find(query.criteria, query.options.fields)
+  const products = await this.find(query.criteria, query.options.fields)
     .sort(query.options.sort)
     .limit(query.options.limit)
     .skip(query.options.skip);
 
-  return { total, blogPosts };
+  return { total, products };
 });
 
 export default model("product", productSchema);
